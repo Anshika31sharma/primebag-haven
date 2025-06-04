@@ -14,5 +14,6 @@ discount: {
 bgcolor: String,
 panelcolor: String,
 textcolor: String,
+createdAt: { type: Date, default: Date.now }
 })
 module.exports = mongoose.model("product", ProductSchema);
