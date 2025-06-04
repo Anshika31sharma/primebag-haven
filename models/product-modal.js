@@ -1,9 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
-mongoose.connect9("mogodb://127.0.0.1:27017/scatch");
+// Fix typo in mongoose.connect
+mongoose.connect("mongodb://127.0.0.1:27017/scatch");
 
 const ProductSchema =  mongoose.Schema({
-image: String,
+image: Buffer,
 name: String,
 price: Number,
 discount: {
