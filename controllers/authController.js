@@ -42,10 +42,14 @@ module.exports.loginUser = async function (req, res) {
         return res.redirect('/');
     }
     bcrypt.compare(password,user.password,function(err,result){
+        if (err) {
+            console.error('Bcrypt compare error:', err);
+            req.flash('error', 'Internal server error. Please try again.');
+            return res.status(500).redirect('/');
+        }
         if(result){
             let token = generateToken(user);
             res.cookie("token",token);
-            // Redirect to shop or dashboard after successful login
             return res.redirect('/shop');
         }
         req.flash('error', 'incorrect email or password');
