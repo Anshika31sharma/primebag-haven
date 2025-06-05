@@ -1,15 +1,13 @@
-const mongoose = require('mongoose');
-const dbgr = require("debug")("development:mongoose");
-const config = require("config");
+require("dotenv").config();
+const mongoose = require("mongoose");
 
-const uri = config.get("MONGODB_URI");
-console.log("MongoDB URI:", uri);
-mongoose.connect(uri)
-.then(function () {
-  dbgr("Connected to MongoDB successfully");
+const uri = process.env.MONGODB_URI;
+
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 })
-.catch(function (err) {
-  dbgr("MongoDB connection error:", err);
-});
+.then(() => console.log("MongoDB connected"))
+.catch(err => console.error("MongoDB connection error:", err));
 
 module.exports = mongoose.connection;
