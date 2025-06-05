@@ -41,6 +41,7 @@ module.exports.loginUser = async function (req, res) {
         req.flash('error', 'incorrect email or password');
         return res.redirect('/');
     }
+    console.log('Login attempt:', { email, userFound: !!user, userPassword: user.password, jwtKey: process.env.JWT_KEY });
     bcrypt.compare(password,user.password,function(err,result){
         if (err) {
             console.error('Bcrypt compare error:', err);
