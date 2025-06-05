@@ -1,3 +1,3 @@
 {
-    "MONGODB_URI": "mongodb://127.0.0.1:27017"
+  "MONGODB_URI": "mongodb+srv://anshika:Dartag9!9@cluster0.dqhm8.mongodb.net/scatch?retryWrites=true&w=majority&appName=Cluster0"
 }
