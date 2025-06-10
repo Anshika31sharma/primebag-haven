@@ -23,8 +23,8 @@ module.exports.registerUser =  async (req, res) => {
      res.cookie("token",token);
      return res.redirect('/shop');
  } catch(err){
-     console.log(err.message);
-     req.flash('error', 'Registration failed. Please try again.');
+     console.error('Registration error:', err);
+     req.flash('error', 'Registration failed: ' + err.message);
      return res.redirect('/');
  }
 }
