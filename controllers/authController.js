@@ -23,7 +23,7 @@ module.exports.registerUser =  async (req, res) => {
      });
   let token =  generateToken(user);
   res.cookie("token",token);
-  res.send("user created successfully");
+  return res.redirect('/shop');
         }
        
      })
@@ -35,27 +35,30 @@ module.exports.registerUser =  async (req, res) => {
 
 }
 module.exports.loginUser = async function (req, res) {
-    let {email,password} = req.body;
-    let user = await userModal.findOne({email:email});
-    if(!user) {
+    if (req.cookies && req.cookies.token) {
+        return res.redirect('/shop');
+    }
+    let {email, password} = req.body;
+    let user = await userModal.findOne({ email: email });
+    if (!user) {
         req.flash('error', 'incorrect email or password');
-        return res.redirect('/');
+        return res.redirect('/users/login');
     }
     console.log('Login attempt:', { email, userFound: !!user, userPassword: user.password, jwtKey: process.env.JWT_KEY });
-    bcrypt.compare(password,user.password,function(err,result){
+    bcrypt.compare(password, user.password, function (err, result) {
         if (err) {
             console.error('Bcrypt compare error:', err);
             req.flash('error', 'Internal server error. Please try again.');
-            return res.status(500).redirect('/');
+            return res.status(500).redirect('/users/login');
         }
-        if(result){
+        if (result) {
             let token = generateToken(user);
-            res.cookie("token",token);
+            res.cookie("token", token);
             return res.redirect('/shop');
         }
         req.flash('error', 'incorrect email or password');
-        return res.redirect('/');
-    })
+        return res.redirect('/users/login');
+    });
 }
 
 module.exports.logout = function (req, res) {
