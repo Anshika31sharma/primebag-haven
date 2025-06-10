@@ -10,29 +10,23 @@ module.exports.registerUser =  async (req, res) => {
     let user = await userModal.findOne({email:email})
      if (user) {
          req.flash('error', 'user already exists');
-         return res.redirect('/'); // Redirect to home or registration page
+         return res.redirect('/'); 
      }
-     bcrypt.genSalt(10,function(err,salt){
-    bcrypt.hash(password,salt,async function(err,hash){
-        if(err) return res.send(err.message); 
-        else{
-               let user = await userModal.create({
+     const salt = await bcrypt.genSalt(10);
+     const hash = await bcrypt.hash(password, salt);
+     let newUser = await userModal.create({
          fullName,
          email,
          password: hash // Save hashed password
      });
-  let token =  generateToken(user);
-  res.cookie("token",token);
-  return res.redirect('/shop');
-        }
-       
-     })
-    })
-  
+     let token =  generateToken(newUser);
+     res.cookie("token",token);
+     return res.redirect('/shop');
  } catch(err){
      console.log(err.message);
+     req.flash('error', 'Registration failed. Please try again.');
+     return res.redirect('/');
  }
-
 }
 module.exports.loginUser = async function (req, res) {
     if (req.cookies && req.cookies.token) {
